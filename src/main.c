@@ -7,7 +7,6 @@ int main(void) {
   unsigned char i;
 
   DDRD |= 0xFF;
-  PORTD |= _BV(PD1);
 
   while (1) {
     for (i = 0; i <= 7; i++) {
