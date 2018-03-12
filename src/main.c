@@ -1,19 +1,18 @@
 #include <avr/io.h>
+#include <util/delay.h>
+
+#define F_CPU 16000000L
 
 int main(void) {
-  unsigned char butCount = 0;
+  unsigned char i;
 
-  DDRB |= _BV(PB5); // set pin PORTB5 as output
-  DDRD &= ~_BV(PD7); // set pin PORTD7 as input
-  PORTD |= _BV(PD7); // set pull-up to PORTD7
+  DDRD |= 0xFF;
+  PORTD |= _BV(PD1);
 
   while (1) {
-    //if button pressed
-    if (!(PIND&_BV(PD7)))
-      // led on
-      (butCount < 5) ? butCount++ : (PORTB |= _BV(PB5));
-    else
-      // led off
-      (butCount > 0) ? butCount-- : (PORTB &= ~_BV(PB5));
+    for (i = 0; i <= 7; i++) {
+      PORTD = (1<<i);
+      _delay_ms(50);
+    }
   }
 }
