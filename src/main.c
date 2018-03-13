@@ -1,22 +1,24 @@
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include <util/delay.h>
 
-#include <lcd.h>
+int main (void) {
+	DDRB |= _BV(PB1);
 
-#define F_CPU 16000000UL
+	TCCR1A |= _BV(COM1A1) | _BV(WGM10);
+	TCCR1B |= _BV(CS10) | _BV(WGM12);
 
-void portInit(void) {
-	PORTD=0x00;
-	DDRD=0xFF;
-}
+	uint8_t PWM = 0x00;
+	uint8_t UP = 1;
 
-int main(void) {
-	portInit(); 
-	LCDInit();
+	while(1) {
+		OCR1A = PWM;
 
-	setPosition(0,0);
-	stringLCD("HELLO FROM");
-	setPosition(0,1);
-	stringLCD("ATMEGA328P");
-	while(1) {}
+		PWM += UP ? 1 : -1;
+
+		if (PWM == 0xff) UP = 0;
+		else if (PWM == 0x00) UP = 1;
+
+		_delay_ms(2);
+	}
 }
